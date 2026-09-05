@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Architecture de partage de fichiers avec DFS et haute disponibilité — Anas Sellam">
+  <title>Architecture DFS et haute disponibilité — Anas Sellam</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="site">
+    <header class="header">
+      <a class="brand" href="index.html#accueil" aria-label="Accueil — Anas Sellam">AS</a>
+
+      <nav class="nav" aria-label="Navigation principale">
+        <a href="index.html#projets">Projets</a>
+        <a href="https://www.linkedin.com/in/anas-sellam/" target="_blank" rel="noopener noreferrer">
+          LinkedIn <span aria-hidden="true">↗</span>
+        </a>
+        <a href="mailto:sellam_anas@outlook.com">
+          Email <span aria-hidden="true">↗</span>
+        </a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="detail">
+        <a class="back-link" href="index.html#projets">
+          <span aria-hidden="true">←</span> Retour aux projets
+        </a>
+
+        <div class="detail-header">
+          <p class="label">Épreuve professionnelle · BTS SIO SISR</p>
+          <h1>Architecture de partage de fichiers avec DFS et haute disponibilité</h1>
+          <p>
+            Conception et déploiement d'une infrastructure Windows Server
+            virtualisée sous Proxmox, fournissant un point d'accès DFS
+            unique aux utilisateurs du domaine <code>paris.stationf</code>,
+            avec réplication des données entre deux serveurs de fichiers et
+            automatisation des accès par GPO.
+          </p>
+          <div class="detail-tags">
+            <span>Windows Server 2025</span>
+            <span>Active Directory</span>
+            <span>DFS Namespace</span>
+            <span>DFS Replication</span>
+            <span>Proxmox</span>
+            <span>GPO</span>
+            <span>LACP</span>
+          </div>
+
+          <a class="download-btn" href="projet-04-fiche-descriptive.pdf" download>
+            <span aria-hidden="true">⬇</span> Télécharger la fiche descriptive de réalisation professionnelle
+          </a>
+        </div>
+
+        <div class="detail-image">
+          <img src="architecture-projet-04.png" alt="Architecture : deux hôtes Proxmox hébergeant chacun un contrôleur Active Directory et un serveur de fichiers, réplication AD et DFS-R en maillé entre les deux hôtes, connectés en LACP à un stack SW-CORE1 / SW-CORE2">
+        </div>
+
+        <div class="detail-section">
+          <h2>Synthèse du projet</h2>
+          <p>
+            Le projet consiste à mettre à disposition des utilisateurs un
+            espace de fichiers centralisé, transparent et résilient. Les
+            utilisateurs accèdent aux ressources par un chemin logique
+            unique, <code>\\paris.stationf\Partage</code>, sans avoir à
+            connaître le serveur physique qui héberge réellement les
+            données.
+          </p>
+          <p>
+            La solution s'appuie sur deux serveurs de fichiers Windows
+            Server 2025. Les dossiers publiés dans le namespace DFS sont
+            répliqués entre ces deux serveurs au moyen de DFS Replication,
+            en mode bidirectionnel et maillé. L'authentification et
+            l'autorisation sont assurées par le domaine Active Directory
+            <code>paris.stationf</code>, avec des comptes organisés en
+            unités d'organisation par service et par startup, et des GPO qui
+            automatisent le montage des lecteurs réseau.
+          </p>
+          <table class="detail-table">
+            <tbody>
+              <tr><td>Domaine Active Directory</td><td><code>paris.stationf</code></td></tr>
+              <tr><td>Namespace DFS</td><td><code>\\paris.stationf\Partage</code></td></tr>
+              <tr><td>Serveurs de fichiers</td><td><code>FILESERVER1</code> et <code>FILESERVEUR2</code></td></tr>
+              <tr><td>Virtualisation</td><td>Proxmox 1 et Proxmox 2</td></tr>
+              <tr><td>Réplication</td><td>DFS-R bidirectionnelle, topologie maillée (full mesh)</td></tr>
+              <tr><td>Commutation</td><td><code>SW-CORE1</code> et <code>SW-CORE2</code> en stack</td></tr>
+              <tr><td>Agrégation de liens</td><td>LACP sur les liaisons serveurs–stack</td></tr>
+              <tr><td>Accès utilisateur</td><td>Namespace DFS et lecteurs mappés par GPO</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="detail-section">
+          <h2>Contexte professionnel</h2>
+          <p>
+            Dans une organisation regroupant plusieurs services et startups,
+            les utilisateurs doivent retrouver leurs documents depuis
+            différents postes de travail. Une architecture reposant sur un
+            seul serveur de fichiers crée un point de défaillance unique et
+            oblige les utilisateurs à connaître l'emplacement physique des
+            partages.
+          </p>
+          <p>
+            Le besoin est donc de fournir un accès uniforme aux ressources,
+            de conserver une copie des données sur deux serveurs, de gérer
+            les autorisations à partir d'Active Directory et de limiter les
+            opérations manuelles côté poste client.
+          </p>
+          <table class="detail-table">
+            <thead>
+              <tr><th>Besoin</th><th>Réponse apportée</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Accéder aux fichiers avec un chemin stable</td><td>Namespace DFS <code>\\paris.stationf\Partage</code></td></tr>
+              <tr><td>Éviter la dépendance à un serveur unique</td><td>Deux cibles DFS pour les données</td></tr>
+              <tr><td>Synchroniser les données</td><td>DFS Replication entre les deux serveurs</td></tr>
+              <tr><td>Retrouver son environnement sur plusieurs postes</td><td>Profil itinérant et dossier personnel redirigé</td></tr>
+              <tr><td>Appliquer les droits par service</td><td>Groupes de sécurité Active Directory</td></tr>
+              <tr><td>Automatiser l'accès</td><td>GPO de mappage des lecteurs réseau</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="detail-section">
+          <h2>Active Directory : organisation des objets</h2>
+          <p>
+            Le domaine Active Directory est <code>paris.stationf</code>. La
+            structure comprend une unité d'organisation <code>office</code>,
+            contenant <code>admin</code> et <code>rh</code>, ainsi qu'une
+            unité d'organisation <code>startups</code> regroupant les
+            entités de l'organisation.
+          </p>
+        </div>
+
+       
+
+        <div class="detail-section">
+          <p>
+            Les utilisateurs sont associés à des groupes de sécurité
+            représentant leur service ou leur startup (<code>gr-rh</code>,
+            <code>gr-admin</code>, <code>gr-startup1</code>, etc.). Les
+            droits sont attribués aux groupes plutôt qu'aux utilisateurs
+            individuellement, ce qui simplifie l'arrivée ou le départ d'un
+            utilisateur et rend les audits de droits plus lisibles.
+          </p>
+        </div>
+
+        <div class="detail-section">
+          <h2>Namespace DFS et arborescence des données</h2>
+          <p>Le namespace est publié à l'adresse suivante :</p>
+          <pre><code>\\paris.stationf\Partage</code></pre>
+          <table class="detail-table">
+            <thead>
+              <tr><th>Dossier DFS</th><th>Usage</th><th>Public concerné</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>Profiles</code></td><td>Profils itinérants</td><td>Utilisateurs concernés</td></tr>
+              <tr><td><code>DossiersPersonnels</code></td><td>Dossier personnel de chaque utilisateur</td><td>Utilisateur propriétaire</td></tr>
+              <tr><td><code>Partage-rh</code></td><td>Documents du service RH</td><td>Groupe <code>gr-rh</code></td></tr>
+              <tr><td><code>Startups</code></td><td>Documents propres aux startups</td><td>Groupe de la startup concernée</td></tr>
+            </tbody>
+          </table>
+          <pre><code>\\paris.stationf\Partage
+├── Profiles
+│   └── ID_UTILISATEUR
+├── DossiersPersonnels
+│   └── ID_UTILISATEUR
+├── Partage-rh
+└── Startups
+    ├── startup1
+    ├── startup2
+    └── ...</code></pre>
+        </div>
+
+        <div class="detail-section">
+          <h2>DFS Replication</h2>
+          <p>
+            DFS-R est configuré entre <code>FILESERVER1</code> et
+            <code>FILESERVEUR2</code> selon une topologie en maillage
+            complet (full mesh), correspondant ici à une réplication
+            bidirectionnelle. Chaque serveur dispose d'une copie des
+            dossiers <code>Profiles</code>, <code>DossiersPersonnels</code>,
+            <code>Partage-rh</code> et <code>Startups</code>, stockés sur le
+            disque <code>D:</code>.
+          </p>
+          <pre><code>D:\DFSData\Profiles
+D:\DFSData\DossiersPersonnels
+D:\DFSData\Partage-rh
+D:\DFSData\Startups</code></pre>
+          <p>
+            DFS-R ne réalise pas une fusion intelligente de fichiers
+            modifiés simultanément : en cas de conflit, un fichier est
+            conservé comme version principale et l'autre peut être placé
+            dans <code>DfsrPrivate\ConflictAndDeleted</code>. La réplication
+            protège principalement contre l'indisponibilité d'une cible,
+            mais ne remplace pas une sauvegarde indépendante contre la
+            suppression accidentelle ou la corruption.
+          </p>
+        </div>
+
+        <div class="detail-section">
+          <h2>GPO, profils itinérants et dossiers personnels</h2>
+          <p>
+            Les GPO connectent automatiquement les utilisateurs au namespace
+            DFS via des lecteurs mappés, configurés dans <em>Configuration
+            utilisateur → Préférences → Paramètres Windows → Mappages de
+            lecteurs</em>, en ciblant le namespace DFS plutôt qu'un chemin
+            direct vers un serveur de fichiers.
+          </p>
+          <table class="detail-table">
+            <thead>
+              <tr><th>Lecteur</th><th>Chemin logique</th><th>Usage</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>O:</code></td><td><code>\\paris.stationf\Partage</code></td><td>Accès aux ressources communes</td></tr>
+              <tr><td><code>P:</code></td><td><code>\\paris.stationf\Partage\DossiersPersonnels\ID_UTILISATEUR</code></td><td>Données personnelles</td></tr>
+            </tbody>
+          </table>
+          <p>
+            Le profil itinérant et la redirection du dossier personnel
+            permettent à l'utilisateur de retrouver son environnement et ses
+            données depuis n'importe quel poste joint au domaine.
+          </p>
+        </div>
+
+        <div class="detail-section">
+          <h2>Matrice de droits</h2>
+          <table class="detail-table">
+            <thead>
+              <tr><th>Ressource</th><th>Groupe</th><th>Droit</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>Profiles\%username%</code></td><td>Utilisateur propriétaire</td><td>Contrôle sur son profil</td></tr>
+              <tr><td><code>DossiersPersonnels\%username%</code></td><td>Utilisateur propriétaire</td><td>Modification sur son dossier uniquement</td></tr>
+              <tr><td><code>Partage-rh</code></td><td><code>gr-rh</code></td><td>Modification</td></tr>
+              <tr><td><code>Partage-rh</code></td><td><code>gr-admin</code></td><td>Contrôle total (audité)</td></tr>
+              <tr><td><code>Startups\startupX</code></td><td><code>gr-startupX</code></td><td>Modification limitée au dossier de la startup</td></tr>
+              <tr><td>Racine <code>Partage</code></td><td>Utilisateurs authentifiés</td><td>Lecture / parcours</td></tr>
+            </tbody>
+          </table>
+          <p>
+            Les droits sont attribués selon le principe du moindre
+            privilège, avec une granularité portée principalement sur les
+            permissions NTFS. Les comptes administrateurs ne sont pas
+            utilisés pour le travail quotidien.
+          </p>
+        </div>
+
+        <div class="detail-section">
+          <h2>Réseau et virtualisation</h2>
+          <p>
+            Les serveurs Windows sont virtualisés sur deux hôtes Proxmox,
+            chacun hébergeant un contrôleur de domaine Active Directory et
+            un serveur de fichiers, afin de répartir les rôles et limiter
+            l'impact d'une panne d'un hyperviseur. Les liaisons des serveurs
+            vers la stack de commutation (<code>SW-CORE1</code> /
+            <code>SW-CORE2</code>) sont agrégées en LACP pour améliorer la
+            capacité et la tolérance à la panne d'un lien.
+          </p>
+        </div>
+
+        <div class="detail-section">
+          <h2>Procédure de déploiement</h2>
+          <ul>
+            <li>Préparer l'environnement : VM Windows Server 2025 sur les deux hôtes Proxmox, adressage IP, DNS, NTP et VLAN.</li>
+            <li>Déployer Active Directory et vérifier la réplication entre contrôleurs de domaine.</li>
+            <li>Créer les OU, les comptes et les groupes de sécurité.</li>
+            <li>Préparer les serveurs de fichiers : jonction au domaine, disque <code>D:</code>, permissions NTFS.</li>
+            <li>Installer les rôles DFS Namespaces et DFS Replication, créer le namespace et ses cibles.</li>
+            <li>Configurer DFS-R en topologie full mesh sur les dossiers répliqués.</li>
+            <li>Configurer les GPO de mappage de lecteurs, redirection de dossiers et profils itinérants.</li>
+            <li>Tester et documenter l'accès, la réplication et le comportement lors de l'arrêt d'un serveur.</li>
+          </ul>
+        </div>
+
+        <div class="detail-section">
+          <h2>Plan de tests</h2>
+          <table class="detail-table">
+            <thead>
+              <tr><th>Test</th><th>Résultat attendu</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Résolution du domaine</td><td>Contrôleurs et serveurs résolus par DNS</td></tr>
+              <tr><td>Authentification utilisateur</td><td>Ouverture de session par un compte du domaine</td></tr>
+              <tr><td>Lecteur commun / personnel</td><td>Lecteurs <code>O:</code> et <code>P:</code> montés automatiquement</td></tr>
+              <tr><td>Isolation startup</td><td>Une startup ne lit pas les dossiers d'une autre startup</td></tr>
+              <tr><td>Convergence DFS-R</td><td>Un fichier créé sur une cible apparaît sur l'autre</td></tr>
+              <tr><td>Indisponibilité d'une cible</td><td>L'accès reste possible depuis l'autre serveur</td></tr>
+              <tr><td>Réplication AD</td><td>Les objets créés sont répliqués entre contrôleurs</td></tr>
+              <tr><td>Permissions NTFS</td><td>Accès autorisés fonctionnels, accès interdits refusés</td></tr>
+            </tbody>
+          </table>
+          <pre><code>gpresult /h C:\Temp\gpresult.html
+repadmin /replsummary
+Get-Service DFSR
+Get-DfsrBacklog -GroupName "NOM_GROUPE_DFSR" -SourceComputerName "FILESERVER1" -DestinationComputerName "FILESERVEUR2"
+Get-SmbShare
+Get-Acl "D:\DFSData\Partage-rh"</code></pre>
+        </div>
+
+        <div class="detail-section">
+          <h2>Compétences mobilisées</h2>
+          <table class="detail-table">
+            <thead>
+              <tr><th>Compétence</th><th>Mise en œuvre</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Concevoir une solution d'infrastructure réseau</td><td>Analyse du besoin, architecture virtualisée, redondance des serveurs et organisation des accès</td></tr>
+              <tr><td>Installer, tester et déployer une solution</td><td>Installation des rôles Windows Server, création du namespace, configuration DFS-R et GPO</td></tr>
+              <tr><td>Exploiter, dépanner et superviser</td><td>Contrôle de la réplication, diagnostic DNS/GPO/permissions, tests de bascule et suivi des journaux</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="detail-section">
+          <h2>Résultat</h2>
+          <p>
+            Les utilisateurs disposent d'un accès transparent aux ressources
+            partagées. Les données sont disponibles sur deux serveurs de
+            fichiers. Les droits sont centralisés et administrables par
+            groupes. La solution est documentée et peut être maintenue ou
+            étendue à de nouvelles startups.
+          </p>
+        </div>
+
+        <p class="detail-note">
+          Les mots de passe, adresses IP précises et autres informations
+          sensibles ne sont pas reproduits dans ce document destiné à un
+          portfolio public.
+        </p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Anas Sellam</span>
+      <a href="mailto:sellam_anas@outlook.com">Me contacter</a>
+    </footer>
+  </div>
+</body>
+</html>

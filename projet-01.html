@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Projet Cisco Packet Tracer — Réseau d'entreprise avec VLAN et services réseau — Anas Sellam">
+  <title>Réseau d'entreprise avec VLAN — Anas Sellam</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="site">
+    <header class="header">
+      <a class="brand" href="index.html#accueil" aria-label="Accueil — Anas Sellam">AS</a>
+
+      <nav class="nav" aria-label="Navigation principale">
+        <a href="index.html#projets">Projets</a>
+        <a href="https://www.linkedin.com/in/anas-sellam/" target="_blank" rel="noopener noreferrer">
+          LinkedIn <span aria-hidden="true">↗</span>
+        </a>
+        <a href="mailto:sellam_anas@outlook.com">
+          Email <span aria-hidden="true">↗</span>
+        </a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="detail">
+        <a class="back-link" href="index.html#projets">
+          <span aria-hidden="true">←</span> Retour aux projets
+        </a>
+
+        <div class="detail-header">
+          <p class="label">Réseau · Cisco Packet Tracer</p>
+          <h1>Réseau d'entreprise avec VLAN et services réseau</h1>
+          <p>
+            Infrastructure réseau d'une petite entreprise organisée autour de deux
+            services, Ventes et SAV, avec segmentation VLAN, routage inter-VLAN,
+            attribution automatique des adresses IP par DHCP, résolution DNS
+            interne et un serveur Web accessible en HTTP/HTTPS.
+          </p>
+          <div class="detail-tags">
+            <span>Cisco Packet Tracer</span>
+            <span>VLAN</span>
+            <span>Routage inter-VLAN</span>
+            <span>DHCP</span>
+            <span>DNS</span>
+            <span>HTTP/HTTPS</span>
+            <span>PVST</span>
+          </div>
+
+          <a class="download-btn" href="projet-01.pkt" download>
+            <span aria-hidden="true">⬇</span> Télécharger le fichier Packet Tracer
+          </a>
+        </div>
+
+        <div class="detail-image">
+          <img src="topologie-projet-01.png" alt="Topologie du réseau : VLAN 20 Ventes, VLAN 30 SAV, switches SW-01/SW-02/SW-03, routeur RT-01, serveurs DNS, DHCP et Web">
+        </div>
+
+        <div class="detail-section">
+          <h2>Présentation du projet</h2>
+          <p>
+            Ce projet a été réalisé avec Cisco Packet Tracer. Il représente
+            l'infrastructure réseau d'une petite entreprise organisée autour de
+            deux services : Ventes et SAV.
+          </p>
+          <p>La configuration comprend :</p>
+          <ul>
+            <li>un routeur Cisco 1841 ;</li>
+            <li>trois commutateurs Cisco 2960-24TT ;</li>
+            <li>deux postes clients ;</li>
+            <li>un serveur DNS ;</li>
+            <li>un serveur DHCP ;</li>
+            <li>un serveur Web ;</li>
+            <li>deux VLAN métiers ;</li>
+            <li>des trunks entre les équipements réseau ;</li>
+            <li>du routage inter-VLAN ;</li>
+            <li>une attribution automatique des adresses IP par DHCP.</li>
+          </ul>
+        </div>
+
+        <div class="detail-section">
+          <h2>Topologie</h2>
+          <p>
+            Les postes clients sont connectés au switch SW-02. Ce switch est
+            relié à SW-01 par un lien trunk. SW-01 est relié au routeur RT-01,
+            qui assure le routage entre les VLAN.
+          </p>
+          <p>
+            Le routeur est également relié au switch SW-03, qui connecte les
+            serveurs DNS, DHCP et Web.
+          </p>
+        </div>
+
+        <div class="detail-section">
+          <h2>Plan d'adressage</h2>
+          <table class="detail-table">
+            <thead>
+              <tr><th>Réseau</th><th>VLAN</th><th>Passerelle</th><th>Usage</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>192.168.0.0/23</code></td><td>20</td><td><code>192.168.0.1</code></td><td>Ventes</td></tr>
+              <tr><td><code>192.168.2.0/24</code></td><td>30</td><td><code>192.168.2.1</code></td><td>SAV</td></tr>
+              <tr><td><code>192.168.3.0/26</code></td><td>1</td><td><code>192.168.3.1</code></td><td>Serveurs</td></tr>
+            </tbody>
+          </table>
+
+          <table class="detail-table">
+            <thead>
+              <tr><th>Équipement</th><th>Adresse IP</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Serveur Web</td><td><code>192.168.3.2</code></td></tr>
+              <tr><td>Serveur DHCP</td><td><code>192.168.3.3</code></td></tr>
+              <tr><td>Serveur DNS</td><td><code>192.168.3.4</code></td></tr>
+            </tbody>
+          </table>
+
+          <h3>VLAN configurés</h3>
+          <table class="detail-table">
+            <thead>
+              <tr><th>VLAN</th><th>Nom</th><th>Affectation</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>20</td><td><code>ventes</code></td><td>PC-01</td></tr>
+              <tr><td>30</td><td><code>sav</code></td><td>PC-02</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="detail-section">
+          <h2>Configuration du routeur RT-01</h2>
+          <pre><code>hostname rt-01
+!
+ip cef
+no ipv6 cef
+!
+interface FastEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/0.20
+ encapsulation dot1Q 20
+ ip address 192.168.0.1 255.255.254.0
+ ip helper-address 192.168.3.3
+!
+interface FastEthernet0/0.30
+ encapsulation dot1Q 30
+ ip address 192.168.2.1 255.255.255.0
+ ip helper-address 192.168.3.3
+!
+interface FastEthernet0/1
+ ip address 192.168.3.1 255.255.255.192
+ duplex auto
+ speed auto
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+ip classless
+ip flow-export version 9</code></pre>
+          <p>
+            Les sous-interfaces FastEthernet0/0.20 et FastEthernet0/0.30
+            permettent au routeur de communiquer avec les VLAN 20 et 30. La
+            commande <code>ip helper-address</code> permet de transmettre les
+            demandes DHCP au serveur 192.168.3.3.
+          </p>
+        </div>
+
+        <div class="detail-section">
+          <h2>Configuration du switch SW-01</h2>
+          <pre><code>hostname SW-01
+!
+vlan 20
+ name ventes
+!
+vlan 30
+ name sav
+!
+interface FastEthernet0/23
+ switchport mode trunk
+!
+interface FastEthernet0/24
+ switchport mode trunk
+!
+spanning-tree mode pvst
+spanning-tree extend system-id</code></pre>
+          <ul>
+            <li>FastEthernet0/23 est reliée à SW-02.</li>
+            <li>FastEthernet0/24 est reliée au routeur RT-01.</li>
+            <li>Les deux interfaces sont configurées en mode trunk.</li>
+          </ul>
+        </div>
+
+        <div class="detail-section">
+          <h2>Configuration du switch SW-02</h2>
+          <pre><code>hostname SW-02
+!
+vlan 20
+ name ventes
+!
+vlan 30
+ name sav
+!
+interface FastEthernet0/1
+ switchport access vlan 20
+ switchport mode access
+!
+interface FastEthernet0/11
+ switchport access vlan 30
+ switchport mode access
+!
+interface FastEthernet0/24
+ switchport mode trunk
+!
+spanning-tree mode pvst
+spanning-tree extend system-id</code></pre>
+          <ul>
+            <li>FastEthernet0/1 connecte PC-01 au VLAN 20.</li>
+            <li>FastEthernet0/11 connecte PC-02 au VLAN 30.</li>
+            <li>FastEthernet0/24 est le lien trunk vers SW-01.</li>
+          </ul>
+        </div>
+
+        <div class="detail-section">
+          <h2>Configuration du switch SW-03</h2>
+          <pre><code>hostname sw-03
+!
+spanning-tree mode pvst
+spanning-tree extend system-id</code></pre>
+          <p>Les ports utilisés sont :</p>
+          <table class="detail-table">
+            <thead>
+              <tr><th>Port</th><th>Équipement connecté</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>FastEthernet0/1</code></td><td>Serveur DNS</td></tr>
+              <tr><td><code>FastEthernet0/2</code></td><td>Serveur DHCP</td></tr>
+              <tr><td><code>FastEthernet0/3</code></td><td>Serveur Web</td></tr>
+              <tr><td><code>FastEthernet0/24</code></td><td>Routeur RT-01</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="detail-section">
+          <h2>Configuration DHCP</h2>
+          <p>Le serveur DHCP utilise l'adresse 192.168.3.3.</p>
+
+          <h3>Pool VLAN 20 — Ventes</h3>
+          <table class="detail-table">
+            <tbody>
+              <tr><td>Nom du pool</td><td><code>VLAN 20 Ventes</code></td></tr>
+              <tr><td>Réseau</td><td><code>192.168.0.0</code></td></tr>
+              <tr><td>Masque</td><td><code>255.255.254.0</code></td></tr>
+              <tr><td>Passerelle</td><td><code>192.168.0.1</code></td></tr>
+              <tr><td>Plage d'adresses</td><td><code>192.168.0.2</code> à <code>192.168.1.254</code></td></tr>
+              <tr><td>Serveur DNS</td><td><code>192.168.3.4</code></td></tr>
+            </tbody>
+          </table>
+
+          <h3>Pool VLAN 30 — SAV</h3>
+          <table class="detail-table">
+            <tbody>
+              <tr><td>Nom du pool</td><td><code>VLAN 30 Sav</code></td></tr>
+              <tr><td>Réseau</td><td><code>192.168.2.0</code></td></tr>
+              <tr><td>Masque</td><td><code>255.255.255.0</code></td></tr>
+              <tr><td>Passerelle</td><td><code>192.168.2.1</code></td></tr>
+              <tr><td>Plage d'adresses</td><td><code>192.168.2.2</code> à <code>192.168.2.254</code></td></tr>
+              <tr><td>Serveur DNS</td><td><code>192.168.3.4</code></td></tr>
+            </tbody>
+          </table>
+
+          <p>
+            Les postes clients sont configurés en DHCP. Les adresses observées
+            sont PC-01 : <code>192.168.0.2</code> et PC-02 : <code>192.168.2.2</code>.
+          </p>
+        </div>
+
+        <div class="detail-section">
+          <h2>Configuration DNS</h2>
+          <p>Le serveur DNS utilise l'adresse 192.168.3.4.</p>
+          <table class="detail-table">
+            <thead>
+              <tr><th>Type</th><th>Nom</th><th>Adresse ou cible</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>A</td><td><code>srvweb.kaamelott.fr</code></td><td><code>192.168.3.2</code></td></tr>
+              <tr><td>CNAME</td><td><code>www.kaamelott.fr</code></td><td><code>srvweb.kaamelott.fr</code></td></tr>
+            </tbody>
+          </table>
+          <p>Cette configuration permet d'accéder au serveur Web avec le nom <code>www.kaamelott.fr</code>.</p>
+        </div>
+
+        <div class="detail-section">
+          <h2>Configuration du serveur Web</h2>
+          <pre><code>IP address       : 192.168.3.2
+Subnet mask      : 255.255.255.192
+Default gateway  : 192.168.3.1
+DNS server       : 192.168.3.4</code></pre>
+          <p>Les services Web configurés sont HTTP et HTTPS.</p>
+        </div>
+
+        <div class="detail-section">
+          <h2>Services et technologies utilisés</h2>
+          <table class="detail-table">
+            <thead>
+              <tr><th>Technologie</th><th>Utilisation</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>VLAN</td><td>Séparation des services Ventes et SAV</td></tr>
+              <tr><td>Trunk 802.1Q</td><td>Transport de plusieurs VLAN entre les équipements</td></tr>
+              <tr><td>Routage inter-VLAN</td><td>Communication entre les réseaux utilisateurs</td></tr>
+              <tr><td>DHCP</td><td>Attribution automatique des adresses IP</td></tr>
+              <tr><td>DHCP relay</td><td>Transmission des demandes vers le serveur DHCP</td></tr>
+              <tr><td>DNS</td><td>Résolution des noms internes</td></tr>
+              <tr><td>HTTP/HTTPS</td><td>Accès au serveur Web</td></tr>
+              <tr><td>PVST</td><td>Gestion de la boucle réseau avec Spanning Tree</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="detail-section">
+          <h2>Compétences mises en œuvre</h2>
+          <ul>
+            <li>Configuration d'un routeur Cisco.</li>
+            <li>Configuration de commutateurs Cisco Catalyst.</li>
+            <li>Création et affectation de VLAN.</li>
+            <li>Configuration de ports access et trunk.</li>
+            <li>Mise en place du routage inter-VLAN.</li>
+            <li>Configuration d'un relais DHCP.</li>
+            <li>Configuration de services DNS et Web.</li>
+            <li>Élaboration d'un plan d'adressage IPv4.</li>
+            <li>Analyse et validation d'une topologie réseau dans Cisco Packet Tracer.</li>
+          </ul>
+        </div>
+
+        <div class="detail-section">
+          <h2>Commandes de vérification utiles</h2>
+          <pre><code>show vlan brief
+show interfaces trunk
+show ip interface brief
+show ip route
+show running-config</code></pre>
+          <p>
+            Les commandes permettent de vérifier les VLAN, les trunks, l'état
+            des interfaces, les routes et la configuration active des
+            équipements.
+          </p>
+        </div>
+
+        <p class="detail-note">
+          Les mots de passe et secrets présents dans le fichier Packet Tracer
+          ne sont pas reproduits dans ce document afin d'éviter de publier des
+          informations sensibles dans un portfolio.
+        </p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Anas Sellam</span>
+      <a href="mailto:sellam_anas@outlook.com">Me contacter</a>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Segmentation réseau par VLAN, routage inter-VLAN et ACL — Anas Sellam">
+  <title>Segmentation réseau par VLAN et ACL — Anas Sellam</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="site">
+    <header class="header">
+      <a class="brand" href="index.html#accueil" aria-label="Accueil — Anas Sellam">AS</a>
+
+      <nav class="nav" aria-label="Navigation principale">
+        <a href="index.html#projets">Projets</a>
+        <a href="https://www.linkedin.com/in/anas-sellam/" target="_blank" rel="noopener noreferrer">
+          LinkedIn <span aria-hidden="true">↗</span>
+        </a>
+        <a href="mailto:sellam_anas@outlook.com">
+          Email <span aria-hidden="true">↗</span>
+        </a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="detail">
+        <a class="back-link" href="index.html#projets">
+          <span aria-hidden="true">←</span> Retour aux projets
+        </a>
+
+        <div class="detail-header">
+          <p class="label">Épreuve professionnelle · BTS SIO SISR</p>
+          <h1>Segmentation réseau par VLAN, routage inter-VLAN et ACL</h1>
+          <p>
+            Réalisation menée dans le cadre de l'administration de
+            l'infrastructure réseau de Paris Station F, sur des équipements
+            Cisco réels, présentée pour l'épreuve professionnelle du BTS SIO
+            option SISR.
+          </p>
+          <div class="detail-tags">
+            <span>Cisco (infrastructure réelle)</span>
+            <span>VLAN</span>
+            <span>SVI</span>
+            <span>Routage inter-VLAN</span>
+            <span>ACL</span>
+            <span>DHCP relay</span>
+            <span>SSH / MobaXterm</span>
+          </div>
+
+          <a class="download-btn" href="projet-03-fiche-descriptive.pdf" download>
+            <span aria-hidden="true">⬇</span> Télécharger la fiche descriptive de réalisation professionnelle
+          </a>
+        </div>
+
+        <div class="detail-image">
+          <img src="schema-projet-03.png" alt="Schéma physique de l'architecture réseau de Paris Station F : accès Internet, cœur de réseau redondé, couche d'accès, VLAN Management, Office, Invités, DMZ privée et VLAN startups">
+        </div>
+
+        <div class="detail-section">
+          <h2>Présentation du projet</h2>
+          <p>
+            Cette réalisation a été menée dans le cadre de l'administration
+            de l'infrastructure réseau de Paris Station F. L'objectif était
+            de segmenter le réseau afin d'isoler les différents utilisateurs
+            et services, tout en autorisant les communications nécessaires
+            entre les VLAN.
+          </p>
+          <p>
+            La solution repose sur des équipements Cisco, avec un switch
+            cœur de réseau de niveau 3, des switches d'accès et une borne
+            Wi-Fi. L'administration des équipements a été réalisée à
+            distance depuis un poste client avec MobaXterm en SSH.
+          </p>
+        </div>
+
+        <div class="detail-image">
+          <img src="rack-projet-03.jpg" alt="Baie de brassage réelle avec les switches cœur de réseau et switches d'accès câblés, projet Paris Station F">
+        </div>
+
+        <div class="detail-section">
+          <h2>Objectifs techniques</h2>
+          <ul>
+            <li>Créer plusieurs VLAN correspondant aux usages de l'infrastructure.</li>
+            <li>Affecter les ports utilisateurs aux VLAN appropriés.</li>
+            <li>Transporter les VLAN entre les switches grâce aux liaisons trunk.</li>
+            <li>Mettre en place le routage inter-VLAN sur le switch cœur.</li>
+            <li>Relayer les requêtes DHCP grâce aux interfaces virtuelles de niveau 3.</li>
+            <li>Empêcher la communication directe entre les réseaux des startups au moyen d'une ACL.</li>
+          </ul>
+        </div>
+
+        <div class="detail-section">
+          <h2>Architecture retenue</h2>
+          <p>
+            Le réseau est organisé autour d'un cœur de réseau redondé et
+            d'une couche d'accès. Les switches d'accès distribuent les
+            connexions des utilisateurs, des serveurs et de la borne Wi-Fi.
+            Les liaisons entre les équipements sont configurées en trunk afin
+            de transporter les VLAN nécessaires.
+          </p>
+          <p>
+            Le switch cœur assure le routage inter-VLAN au moyen
+            d'interfaces virtuelles de commutation, appelées SVI. Chaque SVI
+            constitue la passerelle du réseau IP associé à son VLAN.
+          </p>
+        </div>
+
+        <div class="detail-section">
+          <h2>Plan d'adressage</h2>
+          <table class="detail-table">
+            <thead>
+              <tr><th>VLAN</th><th>Usage</th><th>Réseau</th><th>Passerelle / SVI</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>100</td><td>DMZ public</td><td><code>172.16.96.0/20</code></td><td><code>172.16.111.254</code></td></tr>
+              <tr><td>200</td><td>DMZ privé</td><td><code>172.16.112.0/20</code></td><td><code>172.16.127.254</code></td></tr>
+              <tr><td>10</td><td>Management</td><td><code>172.16.0.0/19</code></td><td><code>172.16.31.254</code></td></tr>
+              <tr><td>30</td><td>Invités</td><td><code>172.16.192.0/19</code></td><td><code>172.16.192.254</code></td></tr>
+              <tr><td>20</td><td>Office</td><td><code>172.16.32.0/19</code></td><td><code>172.16.63.254</code></td></tr>
+              <tr><td>920</td><td>EXIT</td><td><code>172.16.254.0/28</code></td><td><code>172.16.254.14</code></td></tr>
+              <tr><td>301 à 313</td><td>Startups 1 à 13</td><td><code>172.16.64.0/27</code> à <code>172.16.65.128/27</code></td><td>Voir détail ci-dessous</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Détail des VLAN startups</h3>
+          <table class="detail-table">
+            <thead>
+              <tr><th>VLAN</th><th>Réseau</th><th>SVI</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>301</td><td><code>172.16.64.0/27</code></td><td><code>172.16.64.30</code></td></tr>
+              <tr><td>302</td><td><code>172.16.64.32/27</code></td><td><code>172.16.64.62</code></td></tr>
+              <tr><td>303</td><td><code>172.16.64.64/27</code></td><td><code>172.16.64.94</code></td></tr>
+              <tr><td>304</td><td><code>172.16.64.96/27</code></td><td><code>172.16.64.126</code></td></tr>
+              <tr><td>305</td><td><code>172.16.64.128/27</code></td><td><code>172.16.64.158</code></td></tr>
+              <tr><td>306</td><td><code>172.16.64.160/27</code></td><td><code>172.16.64.190</code></td></tr>
+              <tr><td>307</td><td><code>172.16.64.192/27</code></td><td><code>172.16.64.222</code></td></tr>
+              <tr><td>308</td><td><code>172.16.64.224/27</code></td><td><code>172.16.64.254</code></td></tr>
+              <tr><td>309</td><td><code>172.16.65.0/27</code></td><td><code>172.16.65.30</code></td></tr>
+              <tr><td>310</td><td><code>172.16.65.32/27</code></td><td><code>172.16.65.62</code></td></tr>
+              <tr><td>311</td><td><code>172.16.65.64/27</code></td><td><code>172.16.65.94</code></td></tr>
+              <tr><td>312</td><td><code>172.16.65.96/27</code></td><td><code>172.16.65.126</code></td></tr>
+              <tr><td>313</td><td><code>172.16.65.128/27</code></td><td><code>172.16.65.158</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="detail-section">
+          <h2>Configurations principales</h2>
+          <h3>Interfaces SVI et relais DHCP</h3>
+          <p>
+            Les interfaces VLAN du switch cœur servent de passerelles aux
+            réseaux utilisateurs. Les relais DHCP redirigent les demandes
+            vers les serveurs DHCP configurés dans l'infrastructure.
+          </p>
+          <pre><code>interface Vlan10
+ ip address 172.16.31.254 255.255.224.0
+ ip helper-address 172.16.127.253
+ ip helper-address 172.16.31.252
+
+interface Vlan20
+ ip address 172.16.63.254 255.255.224.0
+ ip helper-address 172.16.127.253
+ ip helper-address 172.16.31.252</code></pre>
+
+          <h3>ACL de séparation des startups</h3>
+          <p>
+            L'ACL suivante bloque les communications entre les réseaux des
+            startups, tout en autorisant les autres flux IP. Elle est
+            appliquée en entrée sur l'interface du VLAN 307.
+          </p>
+          <pre><code>ip access-list extended BLOCK-STARTUPS
+ deny ip 172.16.64.0 0.0.1.255 172.16.64.0 0.0.1.255
+ permit ip any any
+
+interface Vlan307
+ ip access-group BLOCK-STARTUPS in</code></pre>
+        </div>
+
+        <div class="detail-section">
+          <h2>Méthode de mise en œuvre</h2>
+          <ul>
+            <li>Création des VLAN et mise en place du VTP.</li>
+            <li>Configuration des ports utilisateurs en mode access.</li>
+            <li>Configuration des liaisons inter-switches et de la borne Wi-Fi en mode trunk.</li>
+            <li>Création des interfaces SVI sur le switch cœur.</li>
+            <li>Activation du routage inter-VLAN.</li>
+            <li>Mise en place de l'ACL destinée à isoler les réseaux startups.</li>
+            <li>Vérification de la connectivité et de la table de routage.</li>
+          </ul>
+        </div>
+
+        <div class="detail-section">
+          <h2>Validation</h2>
+          <p>
+            Les tests ont confirmé le fonctionnement du routage inter-VLAN :
+            un ping depuis un client du VLAN 10 vers le SVI du VLAN 20 a été
+            réalisé avec succès.
+          </p>
+          <pre><code>ping 172.16.63.254</code></pre>
+          <p>
+            Le filtrage des startups a également été vérifié. Le ping depuis
+            la startup Cycle, située dans le VLAN 307 avec l'adresse
+            172.16.64.64, vers une autre startup a échoué, conformément à la
+            règle de l'ACL.
+          </p>
+          <pre><code>ping 172.16.64.64
+
+Délai d'attente de la demande dépassé.</code></pre>
+          <p>
+            La table de routage du switch cœur affichait les réseaux VLAN
+            comme directement connectés aux interfaces VLAN correspondantes,
+            ce qui confirme l'activation du routage inter-VLAN.
+          </p>
+        </div>
+
+        <div class="detail-section">
+          <h2>Environnement technique</h2>
+          <table class="detail-table">
+            <tbody>
+              <tr><td>Équipements</td><td>Switches Cisco, switch cœur de niveau 3, borne Wi-Fi</td></tr>
+              <tr><td>Accès d'administration</td><td>SSH depuis MobaXterm</td></tr>
+              <tr><td>Segmentation</td><td>VLAN et VTP</td></tr>
+              <tr><td>Routage</td><td>Routage inter-VLAN via SVI</td></tr>
+              <tr><td>Attribution réseau</td><td>Relais DHCP avec <code>ip helper-address</code></td></tr>
+              <tr><td>Sécurité réseau</td><td>ACL étendue Cisco IOS</td></tr>
+              <tr><td>Vérification</td><td>Ping et consultation de la table de routage</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="detail-section">
+          <h2>Compétences mobilisées</h2>
+          <ul>
+            <li>Conception d'une solution d'infrastructure réseau.</li>
+            <li>Déploiement et configuration d'équipements Cisco.</li>
+            <li>Segmentation logique avec les VLAN.</li>
+            <li>Configuration des modes access et trunk.</li>
+            <li>Routage inter-VLAN avec des interfaces SVI.</li>
+            <li>Mise en œuvre d'un relais DHCP.</li>
+            <li>Filtrage des flux avec une ACL étendue.</li>
+            <li>Validation d'une infrastructure réseau par des tests de connectivité.</li>
+          </ul>
+        </div>
+
+        <div class="detail-section">
+          <h2>Conclusion</h2>
+          <p>
+            La segmentation mise en place permet d'isoler les différents
+            usages du réseau tout en conservant les communications
+            nécessaires. Le switch cœur prend en charge le routage entre les
+            VLAN, les trunks assurent le transport des réseaux sur
+            l'infrastructure et l'ACL limite les communications entre
+            startups. Les tests réalisés valident le fonctionnement attendu
+            de la solution.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Anas Sellam</span>
+      <a href="mailto:sellam_anas@outlook.com">Me contacter</a>
+    </footer>
+  </div>
+</body>
+</html>

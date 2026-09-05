@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Infrastructure réseau d'entreprise — Cisco Packet Tracer — Anas Sellam">
+  <title>Infrastructure réseau d'entreprise — Anas Sellam</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="site">
+    <header class="header">
+      <a class="brand" href="index.html#accueil" aria-label="Accueil — Anas Sellam">AS</a>
+
+      <nav class="nav" aria-label="Navigation principale">
+        <a href="index.html#projets">Projets</a>
+        <a href="https://www.linkedin.com/in/anas-sellam/" target="_blank" rel="noopener noreferrer">
+          LinkedIn <span aria-hidden="true">↗</span>
+        </a>
+        <a href="mailto:sellam_anas@outlook.com">
+          Email <span aria-hidden="true">↗</span>
+        </a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="detail">
+        <a class="back-link" href="index.html#projets">
+          <span aria-hidden="true">←</span> Retour aux projets
+        </a>
+
+        <div class="detail-header">
+          <p class="label">Infrastructure · Cisco Packet Tracer</p>
+          <h1>Infrastructure réseau d'entreprise</h1>
+          <p>
+            Conception et configuration d'une infrastructure réseau simulée
+            sous Cisco Packet Tracer, avec segmentation par VLAN, plan
+            d'adressage VLSM, routage dynamique OSPF et services réseau.
+          </p>
+          <div class="detail-tags">
+            <span>Cisco Packet Tracer</span>
+            <span>VLSM</span>
+            <span>OSPF</span>
+            <span>HSRP</span>
+            <span>Rapid-PVST+</span>
+            <span>DHCP</span>
+            <span>DNS</span>
+            <span>SSH</span>
+          </div>
+
+          <a class="download-btn" href="projet-02.pkt" download>
+            <span aria-hidden="true">⬇</span> Télécharger le fichier Packet Tracer
+          </a>
+        </div>
+
+        <div class="detail-image">
+          <img src="topologie-projet-02.png" alt="Topologie du réseau : VLAN LAN (Direction, Comptabilité, IT, Hotline, SAV, Ventes), zone WAN avec routeurs, et DMZ avec serveurs DNS, DHCP et Web">
+        </div>
+
+        <div class="detail-section">
+          <h2>Présentation</h2>
+          <p>
+            Conception et configuration d'une infrastructure réseau simulée
+            sous Cisco Packet Tracer, avec segmentation par VLAN, plan
+            d'adressage VLSM, routage dynamique et services réseau.
+          </p>
+          <p>
+            Le projet comprend des routeurs, des commutateurs de couche 2 et
+            3, une DMZ ainsi que des serveurs DHCP, DNS et Web.
+          </p>
+        </div>
+
+        <div class="detail-section">
+          <h2>Environnement technique</h2>
+          <ul>
+            <li>Cisco Packet Tracer</li>
+            <li>Routeurs Cisco PT-Empty</li>
+            <li>Commutateurs Cisco Catalyst 2960 et 3650</li>
+            <li>Routage inter-VLAN avec sous-interfaces 802.1Q</li>
+            <li>Routage dynamique OSPF</li>
+            <li>Haute disponibilité HSRP</li>
+            <li>Commutation et redondance RSTP / Rapid-PVST+</li>
+            <li>Services DHCP, DNS et Web</li>
+          </ul>
+        </div>
+
+        <div class="detail-section">
+          <h2>Architecture et adressage</h2>
+          <p>
+            Le plan d'adressage a été construit à partir du réseau privé
+            192.168.0.0/16, avec la méthode VLSM afin d'adapter la taille de
+            chaque sous-réseau au nombre de postes prévu.
+          </p>
+          <table class="detail-table">
+            <thead>
+              <tr><th>Zone</th><th>Réseau</th><th>Masque</th><th>Passerelle</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>DMZ</td><td><code>192.168.0.0/25</code></td><td><code>255.255.255.128</code></td><td><code>192.168.0.1</code></td></tr>
+              <tr><td>VLAN 50 — Hotline</td><td><code>192.168.0.128/26</code></td><td><code>255.255.255.192</code></td><td><code>192.168.0.129</code></td></tr>
+              <tr><td>VLAN 30 — Vente</td><td><code>192.168.0.192/26</code></td><td><code>255.255.255.192</code></td><td><code>192.168.0.193</code></td></tr>
+              <tr><td>VLAN 20 — Comptabilité</td><td><code>192.168.1.0/27</code></td><td><code>255.255.255.224</code></td><td><code>192.168.1.1</code></td></tr>
+              <tr><td>VLAN 10 — Direction/RH</td><td><code>192.168.1.32/27</code></td><td><code>255.255.255.224</code></td><td><code>192.168.1.33</code></td></tr>
+              <tr><td>VLAN 90 — IT</td><td><code>192.168.1.64/27</code></td><td><code>255.255.255.224</code></td><td><code>192.168.1.65</code></td></tr>
+              <tr><td>VLAN 40 — SAV</td><td><code>192.168.1.96/27</code></td><td><code>255.255.255.224</code></td><td><code>192.168.1.97</code></td></tr>
+              <tr><td>Liaisons WAN</td><td><code>192.168.1.128/29</code> à <code>192.168.1.156/29</code></td><td><code>255.255.255.248</code></td><td>Selon la liaison</td></tr>
+            </tbody>
+          </table>
+          <p>
+            Les passerelles sont positionnées au début de chaque réseau. Les
+            liaisons WAN utilisent des sous-réseaux dimensionnés pour deux
+            équipements.
+          </p>
+        </div>
+
+        <div class="detail-section">
+          <h2>VLAN configurés</h2>
+          <pre><code>VLAN 10  Direction et RH
+VLAN 20  Comptabilité
+VLAN 30  Vente
+VLAN 40  SAV
+VLAN 50  Hotline
+VLAN 90  IT</code></pre>
+          <p>
+            Les ports reliant deux équipements réseau sont configurés en
+            trunk. Les ports reliant un poste ou un serveur sont configurés
+            en access dans le VLAN correspondant.
+          </p>
+        </div>
+
+        <div class="detail-section">
+          <h2>Configuration de base des équipements Cisco</h2>
+          <p>
+            La configuration de base suivante a été appliquée aux routeurs et
+            aux commutateurs. Le mot de passe d'origine n'est pas reproduit
+            dans ce document destiné au portfolio.
+          </p>
+          <pre><code>enable
+configure terminal
+hostname &lt;NOM_MACHINE&gt;
+enable secret &lt;MOT_DE_PASSE&gt;
+ip domain name pear.com
+username Admin secret &lt;MOT_DE_PASSE&gt;
+crypto key generate rsa
+1024
+line vty 0 4
+transport input ssh
+login local</code></pre>
+          <p>
+            Cette configuration permet l'identification des équipements, la
+            sécurisation du mode privilégié et l'administration distante en
+            SSH.
+          </p>
+        </div>
+
+        <div class="detail-section">
+          <h2>Routage inter-VLAN et relais DHCP</h2>
+          <p>
+            Le routeur connecté au commutateur de couche 3 utilise des
+            sous-interfaces afin de fournir une passerelle à chaque VLAN.
+          </p>
+          <pre><code>interface gigabitEthernet 6/0.&lt;NUMERO_VLAN&gt;
+encapsulation dot1Q &lt;NUMERO_VLAN&gt;
+ip address &lt;PASSERELLE_VLAN&gt; &lt;MASQUE&gt;
+ip helper-address 192.168.0.3</code></pre>
+          <p>
+            Le relais DHCP redirige les requêtes des VLAN vers le serveur
+            SRV-DHCP — 192.168.0.3.
+          </p>
+        </div>
+
+        <div class="detail-section">
+          <h2>Routage OSPF</h2>
+          <p>
+            Le routage dynamique a été configuré avec le processus OSPF 500,
+            dans l'area 0. Les réseaux directement connectés aux routeurs
+            sont annoncés, notamment les liaisons WAN, les VLAN du LAN et la
+            DMZ.
+          </p>
+          <pre><code>router ospf 500
+network &lt;ADRESSE_RESEAU&gt; &lt;WILDCARD&gt; area 0</code></pre>
+        </div>
+
+        <div class="detail-section">
+          <h2>Haute disponibilité HSRP</h2>
+          <p>
+            HSRP a été mis en place sur les routeurs de la DMZ afin de
+            fournir une passerelle virtuelle. RT-DMZ-01 est le routeur
+            prioritaire.
+          </p>
+          <pre><code>interface &lt;INTERFACE_DMZ&gt;
+standby version 2
+standby 10 ip 192.168.0.1
+standby 10 priority 250
+standby 10 preempt</code></pre>
+          <p>
+            Sur le routeur secondaire, la même adresse virtuelle est utilisée
+            avec une priorité plus faible :
+          </p>
+          <pre><code>interface &lt;INTERFACE_DMZ&gt;
+standby version 2
+standby 10 ip 192.168.0.1
+standby 10 priority 7</code></pre>
+        </div>
+
+        <div class="detail-section">
+          <h2>Configuration des commutateurs</h2>
+          <h3>Adresse de gestion</h3>
+          <p>
+            Les commutateurs de la partie VLAN sont administrés depuis le
+            VLAN IT.
+          </p>
+          <pre><code>ip default-gateway 172.16.1.65
+interface vlan 90
+ip address &lt;IP_DE_GESTION&gt; 255.255.255.224
+no shutdown</code></pre>
+
+          <h3>Création des VLAN</h3>
+          <pre><code>vlan &lt;NUMERO_VLAN&gt;
+name &lt;NOM_VLAN&gt;</code></pre>
+
+          <h3>Port trunk</h3>
+          <pre><code>interface &lt;PORT&gt;
+switchport mode trunk</code></pre>
+
+          <h3>Port access</h3>
+          <pre><code>interface &lt;PORT&gt;
+switchport mode access
+switchport access vlan &lt;NUMERO_VLAN&gt;</code></pre>
+        </div>
+
+        <div class="detail-section">
+          <h2>Redondance de niveau 2 avec Rapid-PVST+</h2>
+          <p>
+            Rapid-PVST+ a été activé sur les commutateurs LAN et DMZ. Les
+            priorités ont été ajustées pour que les commutateurs de couche 3
+            désignés soient les root bridges, avec des commutateurs
+            secondaires définis par une priorité intermédiaire.
+          </p>
+          <pre><code>spanning-tree mode rapid-pvst
+spanning-tree vlan 1-100 priority &lt;PRIORITE&gt;</code></pre>
+          <p>
+            Les ports connectés aux postes et aux serveurs ont été configurés
+            en PortFast afin d'accélérer leur mise en service :
+          </p>
+          <pre><code>interface &lt;PORT&gt;
+spanning-tree portfast</code></pre>
+        </div>
+
+        <div class="detail-section">
+          <h2>Services réseau</h2>
+          <h3>DHCP</h3>
+          <p>
+            Le serveur SRV-DHCP — 192.168.0.3 fournit automatiquement les
+            adresses IP aux postes clients de chaque VLAN. Les étendues DHCP
+            ont été prévues selon les besoins de chaque réseau.
+          </p>
+
+          <h3>DNS</h3>
+          <p>Le serveur SRV-DNS — 192.168.0.2 utilise le domaine :</p>
+          <pre><code>pear.com</code></pre>
+          <p>
+            Des enregistrements de type A ont été prévus pour les serveurs en
+            respectant leur hostname. Les alias suivants ont également été
+            configurés :
+          </p>
+          <pre><code>www.pear.com    -&gt; SRV-WEB1
+intra.pear.com  -&gt; SRV-WEB2</code></pre>
+
+          <h3>Serveurs de la DMZ</h3>
+          <table class="detail-table">
+            <tbody>
+              <tr><td>SRV-DNS</td><td><code>192.168.0.2</code></td></tr>
+              <tr><td>SRV-DHCP</td><td><code>192.168.0.3</code></td></tr>
+              <tr><td>SRV-WEB1</td><td><code>192.168.0.4</code></td></tr>
+              <tr><td>SRV-WEB2</td><td><code>192.168.0.5</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="detail-section">
+          <h2>Résultat</h2>
+          <p>
+            Cette réalisation met en œuvre une infrastructure segmentée et
+            redondante, avec séparation des usages par VLAN, adressage
+            optimisé par VLSM, routage OSPF, passerelle hautement disponible
+            avec HSRP, prévention des boucles avec Rapid-PVST+, administration
+            SSH et services DHCP/DNS pour les utilisateurs et les serveurs.
+          </p>
+          <p>
+            Le fichier Cisco Packet Tracer associé permet de visualiser la
+            topologie et de vérifier les configurations réalisées.
+          </p>
+        </div>
+
+        <p class="detail-note">
+          Les mots de passe, clés privées et autres secrets ont été retirés de
+          ce document et remplacés par des variables afin d'éviter de publier
+          des informations sensibles dans un portfolio.
+        </p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Anas Sellam</span>
+      <a href="mailto:sellam_anas@outlook.com">Me contacter</a>
+    </footer>
+  </div>
+</body>
+</html>
